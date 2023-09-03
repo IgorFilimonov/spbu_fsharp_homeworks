@@ -22,32 +22,34 @@ type ProbabilityManager(probs: Map<string, float>) =
 
 type Network (computers: Computer list, probManager: ProbabilityManager) =
     let rec run infected =
-        let rec getNewInfected (infected: Computer list, acc) =
+        let rec getNewInfected (infected: Computer list) acc =
             match infected with
             | [] -> acc
             | h :: t -> 
-                let conditionToGetInfected (computer: Computer) =
-                    not computer.IsInfected && probManager.ApplyProbability(computer)
-                let infectedNeighbours = h.Connections |> List.filter (fun computer -> conditionToGetInfected(computer)) // not infected yet
-                infectedNeighbours |> List.iter (fun computer -> computer.IsInfected <- true) // now they're infected
-                getNewInfected (t, acc @ infectedNeighbours)
-        let newInfected = getNewInfected (infected, [])
-        if (newInfected = []) then
-            let checkIfAllNeighboursAreImmune (comp: Computer) = comp.Connections 
-                                                                 |> List.fold (fun acc comp -> 
-                                                                 acc && probManager.GetProbability(comp) = 0) true
-            let isExpansionOver = infected |> List.fold (fun acc comp -> acc && checkIfAllNeighboursAreImmune(comp) = true) true
-            
+                let candidatesToGetInfected = h.Connections |> List.filter (fun computer -> not computer.IsInfected)
+                let rec loop (candidates: Computer list) (newInfected: Computer list) keepParent =
+                    match candidates with
+                    | [] -> (newInfected, keepParent)
+                    | h :: t -> 
+                        if (probManager.ApplyProbability(h)) then loop t (h :: newInfected) keepParent
+                        elif (probManager.GetProbability(h) = 0) then loop t newInfected keepParent
+                        else loop t newInfected true
+                let (newInfected, keepParent) = loop candidatesToGetInfected [] false
+                newInfected |> List.iter (fun computer -> computer.IsInfected <- true)
+                if (keepParent) then
+                    getNewInfected t (h :: newInfected @ acc)
+                else
+                    getNewInfected t (newInfected @ acc)
+                            
+        let newInfected = getNewInfected infected []
+        Network.PrintState(computers)
+        if (newInfected <> []) then
+            run newInfected            
 
     member _.Run =
         let infected = computers |> List.filter (fun computer -> computer.IsInfected)
         run infected
 
-    member _.PrintState =
+    static member PrintState(computers: Computer list) =
         computers |> List.iter (fun computer -> printf "%s " (if computer.IsInfected then "Infected" else "NotInfected"))
         printfn ""
-
-let test = System.Random()
-for i in [1..5] do printfn "%f" (test.NextDouble())
-let test1 = Map [("1", "2")]
-printfn "%s" (Map.find "1" test1)
