@@ -1,4 +1,6 @@
-﻿type LambdaTerm = 
+﻿module LambdaInterpreter
+
+type LambdaTerm = 
     | Variable of string
     | Application of LambdaTerm * LambdaTerm
     | LambdaAbstraction of string * LambdaTerm
@@ -29,9 +31,3 @@ let rec reduce term =
     | Application(LambdaAbstraction(a, c), b) -> reduce (substitute c a b)
     | Application(a, b) -> Application(reduce a, reduce b)
     | LambdaAbstraction(var, l) -> LambdaAbstraction(var, reduce l)
-
-let tripleX = LambdaAbstraction("x", Application(Application(Variable("x"), Variable("x")), Variable("x")))
-//let term = Application(LambdaAbstraction("x", Variable("y")), Application(tripleX, tripleX))
-let term = Application(LambdaAbstraction("x", Application(Variable("x"), Variable("y"))), Application(Variable("x"), Variable("y")))
-let result = reduce term
-if (result = Variable("y")) then printfn "YES" else printfn "spdlaspo[dl"
