@@ -1,4 +1,6 @@
-﻿open System.IO
+﻿module PhoneBook
+
+open System.IO
 
 let displayHints = 
     printfn ("What do you want to do?\n\
@@ -11,6 +13,8 @@ let displayHints =
             0. Exit")
 
 type Phonebook(numbersByNames: Map<string, string>, namesByNumbers: Map<string, string>) =
+    member _.NumbersByNames with get() = numbersByNames
+    member _.NamesByNumbers with get() = namesByNumbers
     member _.Add(name, number) = 
         let add name number =
             if (Map.tryFind number numbersByNames = None && Map.tryFind name namesByNumbers = None) then
@@ -19,14 +23,8 @@ type Phonebook(numbersByNames: Map<string, string>, namesByNumbers: Map<string, 
                 printfn "Either name or number is already in the book"
                 (numbersByNames, namesByNumbers)
         Phonebook(add name number)
-    member _.FindByName(name) =
-        match Map.tryFind name numbersByNames with
-        | Some x -> printfn "Found number: %s" x
-        | None -> printfn "No person in this book has this name"
-    member _.FindByNumber(number) =
-        match Map.tryFind number namesByNumbers with
-        | Some x -> printfn "Found name: %s" x
-        | None -> printfn "No person in this book has this number"
+    member _.FindByName(name) = Map.tryFind name numbersByNames
+    member _.FindByNumber(number) = Map.tryFind number namesByNumbers
     member _.Print =
         for person in numbersByNames do
             printfn "%s %s" person.Key person.Value
@@ -70,12 +68,18 @@ let rec run (phonebook: Phonebook) =
     | Command.FindByName ->
         printfn "Enter a name:"
         let name = System.Console.ReadLine()
-        phonebook.FindByName(name)
+        let number = phonebook.FindByName(name)
+        match number with
+        | Some x -> printfn "Found number: %s" x
+        | None -> printfn "No person in this book has this name"
         run phonebook
     | Command.FindByNumber ->
         printfn "Enter a number:"
         let number = System.Console.ReadLine()
-        phonebook.FindByNumber(number)
+        let name = phonebook.FindByNumber(number)
+        match name with
+        | Some x -> printfn "Found name: %s" x
+        | None -> printfn "No person in this book has this number"
         run phonebook
     | Command.Print -> phonebook.Print; run phonebook
     | Command.Save -> 
