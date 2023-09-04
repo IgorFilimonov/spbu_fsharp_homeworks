@@ -1,6 +1,6 @@
 ﻿module NetWork
 
-type Computer(os, isInfected, connections: Computer list) = 
+type Computer(os: , isInfected, connections: Computer list) = 
     let mutable mIsInfected = isInfected
     member val OS = os with get
     member _.IsInfected
@@ -13,14 +13,17 @@ type ProbabilityManager(probs: Map<string, float>) =
     member this.ApplyProbability(computer: Computer) =
         let randomNumber = this.Random.NextDouble()
         let osProbability = this.GetProbability(computer)
-        if (0.0 < randomNumber && randomNumber <= osProbability) then
-            true
-        else
-            false
+        (0.0 < randomNumber && randomNumber <= osProbability)
     member _.GetProbability(computer: Computer) =
         match Map.tryFind computer.OS probs with
         | Some x -> x
         | None -> Map.find "Others" probs
+
+type OperationSystem = 
+    | Windows = 1
+    | Linux = 2
+    | MacOS = 3
+    | Others = 4
 
 type Network (computers: Computer list, probManager: ProbabilityManager) =
     let rec run infected =

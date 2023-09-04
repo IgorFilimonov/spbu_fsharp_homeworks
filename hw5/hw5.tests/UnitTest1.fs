@@ -6,7 +6,8 @@ open NetWork
 
 [<Test>]
 let Test1 () =
-    let computer1 = Computer("Windows", true, [])
+    let os = OperationSystem
+    let computer1 = Computer(OperationSystem.Windows, true, [])
     let computer2 = Computer("Linux", false, [])
     let computer3 = Computer("Windows", true, [])
     let computer4 = Computer("Linux", false, [])
