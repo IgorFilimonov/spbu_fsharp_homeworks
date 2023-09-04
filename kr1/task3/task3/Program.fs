@@ -1,7 +1,7 @@
 ﻿module QueueWithPriority
 
 type PriorityQueue() =
-    member val Values: int list = [] with get, set
+    member val Values: List<int * int> = [] with get, set // (priority, value)
     member this.Insert value =
         this.Values <- (value :: this.Values)
     member this.ExtractMin() =
