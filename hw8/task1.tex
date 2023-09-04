@@ -1,0 +1,67 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{Homework 8}
+\author{Igor Filimonov}
+\date{September 2023}
+
+\begin{document}
+
+\maketitle
+
+\section{Grammar}
+\begin{enumerate}
+    \item "program" ::= "term" $\vert$ "let-definitions" \textbackslash n "term"
+    \item "let-definitions" ::= "let-definition" "let-definitions" $\vert$ "let-definition"
+    \item "let-definition" ::= let "variable" = "term" \textbackslash n
+    \item "term" ::= "term'" $\vert$ "application" $\vert$ "abstraction"
+    \item "term'" ::= "variable" $\vert$ ("term")
+    \item "application" ::= "term'" "term'" $\vert$ "term'" "application"
+    \item "abstraction" ::= $\lambda$ "variables"."term"
+    \item "variables" ::= "variable" $\vert$ "variable" "variables"
+    \item "variable" ::= "letter" $\vert$ "letter-or-digit-string"
+    \item "letter-or-digit-string" ::= "letter-or-digit" $\vert$ "letter-or-digit" "letter-or-digit-string"
+    \item "letter-or-digit" ::= "letter" $\vert$ "digit"
+    \item "letter" ::= a $\vert$ b $\vert$ ... $\vert$ z $\vert$ A $\vert$ B $\vert$ ... $\vert$ Z
+    \item "digit" ::= 1 $\vert$ 2 $\vert$ ... $\vert$ 3
+\end{enumerate}
+
+
+\section{Example}
+let A = $\lambda$x y.x (y x) \textbackslash n A
+\begin{enumerate}
+    \item program
+    \item "let-definitions" \textbackslash n "term"
+    \item "let-definition" \textbackslash n "term"
+    \item let "variable" = "term" \textbackslash n "term"
+    \item let "letter" = "term" \textbackslash n "term"
+    \item let A = "term" \textbackslash n "term"
+    \item let A = "abstraction" \textbackslash n "term"
+    \item let A = $\lambda$ "variables"."term" \textbackslash n "term"
+    \item let A = $\lambda$ "variable" "variables"."term" \textbackslash n "term"
+    \item let A = $\lambda$ "variable" "variable"."term" \textbackslash n "term"
+    \item let A = $\lambda$ "letter" "variable"."term" \textbackslash n "term"
+    \item let A = $\lambda$x "variable"."term" \textbackslash n "term"
+    \item let A = $\lambda$x "letter"."term" \textbackslash n "term"
+    \item let A = $\lambda$x y."term" \textbackslash n "term"
+    \item let A = $\lambda$x y."application" \textbackslash n "term"
+    \item let A = $\lambda$x y."term'" "term'" \textbackslash n "term"
+    \item let A = $\lambda$x y."variable" "term'" \textbackslash n "term"
+    \item let A = $\lambda$x y."letter" "term'" \textbackslash n "term"
+    \item let A = $\lambda$x y.x "term'" \textbackslash n "term"
+    \item let A = $\lambda$x y.x ("term") \textbackslash n "term"
+    \item let A = $\lambda$x y.x ("application") \textbackslash n "term"
+    \item let A = $\lambda$x y.x ("term'" "term'") \textbackslash n "term"
+    \item let A = $\lambda$x y.x ("variable" "term'") \textbackslash n "term"
+    \item let A = $\lambda$x y.x ("letter" "term'") \textbackslash n "term"
+    \item let A = $\lambda$x y.x (y "term'") \textbackslash n "term"
+    \item let A = $\lambda$x y.x (y "variable") \textbackslash n "term"
+    \item let A = $\lambda$x y.x (y "letter") \textbackslash n "term"
+    \item let A = $\lambda$x y.x (y x) \textbackslash n "term"
+    \item let A = $\lambda$x y.x (y x) \textbackslash n "term'"
+    \item let A = $\lambda$x y.x (y x) \textbackslash n "variable"
+    \item let A = $\lambda$x y.x (y x) \textbackslash n "letter"
+    \item let A = $\lambda$x y.x (y x) \textbackslash n A
+\end{enumerate}
+
+\end{document}
