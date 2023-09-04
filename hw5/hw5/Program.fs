@@ -1,10 +1,12 @@
-﻿type Computer(os, isInfected, connections: Computer list) = 
+﻿module NetWork
+
+type Computer(os, isInfected, connections: Computer list) = 
     let mutable mIsInfected = isInfected
     member val OS = os with get
     member _.IsInfected
         with get() = mIsInfected
         and set x = mIsInfected <- x
-    member val Connections = connections with get
+    member val Connections = connections with get, set
 
 type ProbabilityManager(probs: Map<string, float>) =
     member _.Random = System.Random()
@@ -46,7 +48,7 @@ type Network (computers: Computer list, probManager: ProbabilityManager) =
         if (newInfected <> []) then
             run newInfected            
 
-    member _.Run =
+    member _.Run() =
         let infected = computers |> List.filter (fun computer -> computer.IsInfected)
         run infected
 
