@@ -32,17 +32,18 @@ type Phonebook(numbersByNames: Map<string, string>, namesByNumbers: Map<string, 
         use streamWriter = File.CreateText(path)
         Map.iter (fun name number -> streamWriter.WriteLine $"{name} {number}") |> ignore
         streamWriter.Close
-    static member Load(path) =
+    member this.Load(path) =
         if (not (File.Exists(path))) then printfn "This file doesn't exist"; Phonebook(Map.empty, Map.empty)
         else
             use streamReader = File.OpenText(path)
-            let rec loop (newPhonebook: Phonebook) =
+            let rec loop (phonebook: Phonebook) =
                 let line = streamReader.ReadLine()
-                if (line = null) then newPhonebook
-                else
+                if (line <> null) then
                     let nameAndPhone = line.Split ' '
-                    loop (newPhonebook.Add(nameAndPhone[0], nameAndPhone[1]))
-            let newPhonebook = loop (Phonebook(Map.empty, Map.empty))
+                    loop (phonebook.Add(nameAndPhone[0], nameAndPhone[1]))
+                else
+                    phonebook
+            let newPhonebook = loop this
             streamReader.Close |> ignore
             newPhonebook
  
@@ -90,7 +91,7 @@ let rec run (phonebook: Phonebook) =
     | Command.Load ->
         printfn "Enter a path:"
         let path = System.Console.ReadLine()
-        run (Phonebook.Load(path))
+        run (phonebook.Load(path))
     | _ -> printfn "Incorrect command"
 
 run (Phonebook(Map.empty, Map.empty))

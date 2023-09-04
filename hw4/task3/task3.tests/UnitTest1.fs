@@ -24,7 +24,7 @@ let findByNumberTest() =
 [<Test>]
 let loadFromFileTest() =
     let path = Path.Combine(Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../..")), "test.txt")
-    let phonebook = Phonebook.Load(path.ToString())
+    let phonebook = Phonebook(Map.empty, Map.empty).Load(path.ToString())
     let numbersByNames = Map.empty.Add("qqq", "qqqq").Add("123", "345")
     let namesByNumbers = Map.empty.Add("qqqq", "qqq").Add("345", "123")
     (phonebook.NumbersByNames, phonebook.NamesByNumbers) |> should equal (numbersByNames, namesByNumbers)
