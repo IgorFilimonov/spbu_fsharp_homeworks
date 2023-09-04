@@ -21,3 +21,9 @@ let Test3 () =
     let text = "{{)){}()]"
     let expected = false
     isBracketSeqCorrect text |> should equal expected
+
+[<Test>]
+let Test4 () =
+    let text = "(oijoijweofj"
+    let expected = false
+    isBracketSeqCorrect text |> should equal expected

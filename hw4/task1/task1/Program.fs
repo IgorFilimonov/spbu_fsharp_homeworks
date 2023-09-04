@@ -3,9 +3,9 @@
 let isBracketSeqCorrect text =
     let openingBrackets = ['('; '['; '{']
     let mappedBrackets = Map [(')', '('); (']', '['); ('}', '{')]
-    let rec loop index prevOpenings =
+    let rec loop index (prevOpenings: char list) =
         if (index = String.length text) then
-            true
+            (prevOpenings.IsEmpty)
         else
             match (openingBrackets |> List.contains(text[index])) with
             | true -> loop (index + 1) (text[index] :: prevOpenings)
