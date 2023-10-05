@@ -1,0 +1,27 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{mathtools}
+
+\title{Homework 3}
+\author{Filimonov Igor}
+
+\begin{document}
+
+\maketitle
+ 
+\textbf{Task 1.} 
+ $ ((\lambda a.(\lambda b.b b) (\lambda b.b b)) b) ((\lambda c.(c\:b)) (\lambda a.a))\xrightarrow[\beta]{}((\lambda b.b)(\lambda b.b))((\lambda c.(c b))(\lambda a.a))\xrightarrow[\beta]{}((\lambda b.b)(\lambda b.b))((\lambda a.a) b)\xrightarrow[\beta]{}(\lambda b.b)(\lambda b.b) b$
+
+\textit{This term doesn't have normal form since we didn't get it using normal strategy}
+
+\textbf{Task 2.}
+$ S K K = (\lambda x y z.x z (y z)) (\lambda x y.x) (\lambda x y.x) 
+= (\lambda x.\lambda y.\lambda z.x z (y z))(\lambda x.\lambda y.x) (\lambda x.\lambda y.x)
+\xrightarrow[\beta]{} (\lambda y.\lambda z.(\lambda x.\lambda y.x) z (y z)) (\lambda x.\lambda y.x)
+\xrightarrow[\beta]{} \lambda z.(\lambda x.\lambda y.x) z ((\lambda x.\lambda y.x) z)
+\xrightarrow[\beta]{} \lambda z.(\lambda x.\lambda y.x) z \lambda y.z
+\xrightarrow[\beta]{} \lambda z.(\lambda y.z) \lambda y.z
+\xrightarrow[\beta]{} \lambda z.z = I
+$
+
+\end{document}
