@@ -3,7 +3,7 @@ module ComputeWithPrecision.tests
 open NUnit.Framework
 open ComputeWithPrecision
 
-let tolerance = 0.0001
+let tolerance = 0.000001
 
 [<Test>]
 let ``2.0 / 12.0 / 3.5 is approximately 0.048`` () =
