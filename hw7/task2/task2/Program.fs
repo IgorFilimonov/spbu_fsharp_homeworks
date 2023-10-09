@@ -27,5 +27,4 @@ let getPagesInfo (url: string) =
         with :? Net.WebException ->
             raise (InvalidOperationException "Incorrect url")
             return None
-    } 
-
+    }
