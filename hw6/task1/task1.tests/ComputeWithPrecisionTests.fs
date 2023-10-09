@@ -1,8 +1,9 @@
 module ComputeWithPrecision.tests
 
 open NUnit.Framework
-open FsUnit
 open ComputeWithPrecision
+
+let tolerance = 0.0001
 
 [<Test>]
 let ``2.0 / 12.0 / 3.5 is approximately 0.048`` () =
@@ -14,4 +15,4 @@ let ``2.0 / 12.0 / 3.5 is approximately 0.048`` () =
             return a / b
         }
     let expectedResult = 0.048
-    Assert.That(result, Is.InRange(expectedResult - 0.001, expectedResult + 0.001))
+    Assert.That(result, Is.InRange(expectedResult - tolerance, expectedResult + tolerance))
