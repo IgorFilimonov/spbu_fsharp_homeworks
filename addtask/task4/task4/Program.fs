@@ -6,7 +6,6 @@ type ILazy<'a> =
     abstract member Get: unit -> 'a
 
 type Lazy<'a>(supplier) =
-    [<VolatileField>]
     let mutable result = None
     interface ILazy<'a> with
         member _.Get() =
@@ -14,6 +13,7 @@ type Lazy<'a>(supplier) =
             result.Value
 
 type LazyWithLock<'a>(supplier) =
+    [<VolatileField>]
     let mutable result = None
     let locker = obj()
     interface ILazy<'a> with
@@ -23,7 +23,6 @@ type LazyWithLock<'a>(supplier) =
                 result.Value)
             else
                 result.Value
-            
 
 type LockFreeLazy<'a>(supplier) =
     let mutable result = None

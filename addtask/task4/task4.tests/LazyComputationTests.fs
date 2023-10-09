@@ -16,22 +16,19 @@ let LazyTest () =
     let result2 = simpleLazy.Get()
     (result1, result2) |> should equal (1, 1)
 
-[<Test>]
-let LazyWithLockTest () =
+let testMultithreadedLazy (lazyComp: (unit -> 'a) -> ILazy<'a>) =
     let counter = ref 0
-    let lazyWithLock = LazyFactory.LazyWithLock(fun () -> Interlocked.Increment(counter))
-    let tasks = Seq.init 5 (fun _ -> async { return lazyWithLock.Get() |> should equal 1 })
+    let concreteLazy = lazyComp(fun () -> Interlocked.Increment(counter))
+    let tasks = Seq.init 5 (fun _ -> async { return concreteLazy.Get() |> should equal 1 })
     tasks
     |> Async.Parallel
     |> Async.RunSynchronously
     |> ignore
 
 [<Test>]
+let LazyWithLockTest () =
+    testMultithreadedLazy LazyFactory.LazyWithLock
+
+[<Test>]
 let LockFreeLazyTest () =
-    let counter = ref 0
-    let lockFreeLazy = LazyFactory.LockFreeLazy(fun () -> Interlocked.Increment(counter))
-    let tasks = Seq.init 5 (fun _ -> async { return lockFreeLazy.Get() |> should equal 1 })
-    tasks
-    |> Async.Parallel
-    |> Async.RunSynchronously
-    |> ignore
+    testMultithreadedLazy LazyFactory.LockFreeLazy
